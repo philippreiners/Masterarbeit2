@@ -64,7 +64,7 @@ for filename in newlist:
     data['Other_error'] = data.lst_uncertainty - data.lst_sigma
     data = data[data.Other_error < 0.5]
     mad = np.mean(data['abs_dif'])
-    ad = np.mean(data['dif'])
+    md = np.mean(data['dif'])
     sigma_error =  np.std(data['dif'])
     n = len(data['dif'])
     comp = n/count_before
@@ -132,32 +132,10 @@ ax.text(260,300, 'sig_err = '+str(round(sigma_error,2)))
 fig.savefig(path_plot)
   
 
-def classify_unique(data,column_name):
-    values = data[column_name].unique()
-    return_list = list()
-    for i in range(len(values)):
-        return_list.append(data[data[column_name]==values[i]])
-    return return_list
 
-
-def plot_classified_lst(classified, path_plot):
-    
-    data = classified[0]
-    fig = plt.figure()
-    
-    ax = fig.add_subplot(111)
-    ax.plot(data['insitu_lst'], data['lst_mean'], '+', color = 'blue')
-    ax.plot(margin, margin)
-    ax.set_xlabel('In-situ LST [K]')
-    ax.set_ylabel('TIMELINE LST [K]')
-    ax.set_xlim(255,330)
-    ax.set_ylim(255,330)
-    ax.set_xticks(xticks)
-    ax.set_yticks(yticks)
-    ax.set_aspect('equal')
 
  
-test
+
 
 
 
