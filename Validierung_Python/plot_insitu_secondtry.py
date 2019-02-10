@@ -6,6 +6,7 @@ Created on Sat Feb  9 19:45:08 2019
 """
 
 import plot_functions
+import filter_functions
 
 import os
 import pandas as pd
@@ -20,8 +21,10 @@ for station in stations:
     
 
     path_extracted = 'F:/new_match/'
-    path_out =  'D:/Uni/Masterarbeit/Plots2/'
+    path_out =  'D:/Uni/Masterarbeit/Plots2/' + station + '/'
     
+    if not os.path.exists(path_out):
+        os.makedirs(path_out)
     
     path_in10 = path_extracted + '/' + '2010/' + station + '__matched_insitu.csv'
     path_in11 = path_extracted + '/' + '2011/' + station + '__matched_insitu.csv'
@@ -37,10 +40,8 @@ for station in stations:
     data = data.append(data11)
     data = data.append(data12)
     
-    data = data[data.lst_uncertainty < 2]
-    data = data[data.quality_flags_L1b == 0]
-    data = data[np.isfinite(data['lst_mean'])]
-    
+    data = filter_insitu_matches(data)
+  
     '''
     plot by platform -----------------------------------------------------------
     '''
@@ -82,50 +83,85 @@ for station in stations:
     titles = tcwv_classes.astype(str)
     fig = plt.figure()
     plt.subplots_adjust(bottom=0, top=1, left=0.125, right=0.95)
-    
-    
-    title = titles[0]+'-'+titles[1]
-    if not data_classified[0].empty:
-        fig = plot_lst(fig, title, data_classified[0], 'red', 221)
-    
-    title = titles[1]+'-'+titles[2]
-    if not data_classified[1].empty:
-        fig = plot_lst(fig, title, data_classified[1], 'red', 222)
-    
-    title = titles[2]+'-'+titles[3]
-    if not data_classified[2].empty:
-        fig = plot_lst(fig, title, data_classified[2], 'red', 223)
-    
-    title = titles[3]+'-'+titles[4]
-    if not data_classified[3].empty:
-        fig = plot_lst(fig, title, data_classified[3], 'red', 224)
-    
+    plot_positions = [221,222,223,224]
+    for i in range(4):
+        title = titles[i]+'-'+titles[i+1]
+        if not data_classified[i].empty:
+            fig = plot_lst(fig, title, data_classified[i], 'red', plot_positions[i])
+     
     path_plot = path_out + '/' + station + '_tcwv_1.pdf'
-    fig.savefig(path_plot)
-    
-    fig = plt.figure()
-    plt.subplots_adjust(bottom=0, top=1, left=0.125, right=0.95)
-    
-    title = titles[4]+'-'+titles[5]
-    if not data_classified[4].empty:
-        fig = plot_lst(fig, title, data_classified[4], 'red', 221)
-    
-    title = titles[5]+'-'+titles[6]
-    if not data_classified[5].empty:
-        fig = plot_lst(fig, title, data_classified[5], 'red', 222)
-    
-    title = titles[6]+'-'+titles[7]
-    if not data_classified[6].empty:
-        fig = plot_lst(fig, title, data_classified[6], 'red', 223)
-    
-    title = titles[7]+'-'+titles[8]
-    if not data_classified[7].empty:
-        fig = plot_lst(fig, title, data_classified[7], 'red', 224)
-    
+    fig.savefig(path_plot)    
+        
+    for i in range(4,8):
+        title = titles[i]+'-'+titles[i+1]
+        if not data_classified[i].empty:
+            fig = plot_lst(fig, title, data_classified[i], 'red', plot_positions[i-4])
+
     path_plot = path_out + '/' + station + '_tcwv_2.pdf'
     fig.savefig(path_plot)
+
+
+    '''
+    plot by view angle--------------------------------------------------------
+    '''
+    
+    va_classes = np.array([0,10,30,50,70])
+    data_classified = classify_by_values(data, 'sat_zenith', va_classes)
+    titles = va_classes.astype(str)
+    fig = plt.figure()
+    plt.subplots_adjust(bottom=0, top=1, left=0.125, right=0.95)
+    plot_positions = [221,222,223,224]
+    for i in range(4):
+        title = titles[i]+'-'+titles[i+1]
+        if not data_classified[i].empty:
+            fig = plot_lst(fig, title, data_classified[i], 'red', plot_positions[i])
+     
+    path_plot = path_out + '/' + station + '_va.pdf'
+    fig.savefig(path_plot)    
+    
+    
+    '''
+    plot by LST--------------------------------------------------------
+    '''
+    
+    lst_classes = np.array([270,285,300,315,330])
+    data_classified = classify_by_values(data, 'lst_mean', lst_classes)
+    titles = lst_classes.astype(str)
+    fig = plt.figure()
+    plt.subplots_adjust(bottom=0, top=1, left=0.125, right=0.95)
+    plot_positions = [221,222,223,224]
+    for i in range(4):
+        title = titles[i]+'-'+titles[i+1]
+        if not data_classified[i].empty:
+            fig = plot_lst(fig, title, data_classified[i], 'red', plot_positions[i])
+     
+    path_plot = path_out + '/' + station + '_lst.pdf'
+    fig.savefig(path_plot) 
+    
+      
+    '''
+    plot by LST--------------------------------------------------------
+    '''
+    
+    sz_classes = np.array([0,30,50,70,90])
+    data_classified = classify_by_values(data, 'sun_zenith', sz_classes)
+    titles = sz_classes.astype(str)
+    fig = plt.figure()
+    plt.subplots_adjust(bottom=0, top=1, left=0.125, right=0.95)
+    plot_positions = [221,222,223,224]
+    for i in range(4):
+        title = titles[i]+'-'+titles[i+1]
+        if not data_classified[i].empty:
+            fig = plot_lst(fig, title, data_classified[i], 'red', plot_positions[i])
+     
+    path_plot = path_out + '/' + station + '_sz.pdf'
+    fig.savefig(path_plot)  
     
     
     
     
     
+    
+        
+
+   

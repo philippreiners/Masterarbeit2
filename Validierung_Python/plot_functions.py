@@ -34,23 +34,27 @@ def plot_lst(fig, title, data, color, plotnumber):
     n = len(data['dif'])
     rmse = sqrt(mean_squared_error(data['insitu_lst'], data['lst_mean']))
     
-    fig.set_figheight(7.5)
-    fig.set_figwidth(7.5)
+    margin = np.array(range(75))+265
+    xticks = np.array(range(8))*10+270
+    yticks = np.array(range(8))*10+270
+    
+    fig.set_figheight(8)
+    fig.set_figwidth(8)
     ax = fig.add_subplot(plotnumber)
     ax.plot(data['insitu_lst'], data['lst_mean'], '+', color = color)
     ax.plot(margin, margin)
     ax.set_xlabel('In-situ LST [K]')
     ax.set_ylabel('TIMELINE LST [K]')
-    ax.set_xlim(255,330)
-    ax.set_ylim(255,330)
+    ax.set_xlim(265,340)
+    ax.set_ylim(265,340)
     ax.set_xticks(xticks)
     ax.set_yticks(yticks)
     ax.set_aspect('equal')
-    ax.text(260,325, 'MAD = '+str(round(mad,2)))
-    ax.text(260,320, 'n = '+str(n))
-    ax.text(260,315, 'MD = '+str(round(md,2)))
-    ax.text(260,310, 'RMSE = '+str(round(rmse,2)))
-    ax.text(260,305, 'sig_err = '+str(round(sigma_error,2)))
+    ax.text(270,335, 'MAD = '+str(round(mad,2)))
+    ax.text(270,330, 'n = '+str(n))
+    ax.text(270,325, 'MD = '+str(round(md,2)))
+    ax.text(270,320, 'RMSE = '+str(round(rmse,2)))
+    ax.text(270,315, 'sig_err = '+str(round(sigma_error,2)))
     ax.set_title(title)
     return fig
     
