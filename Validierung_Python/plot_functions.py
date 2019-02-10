@@ -13,6 +13,17 @@ def classify_unique(data,column_name):
     return return_list
 
 
+
+def classify_by_values(data, column_name, values):
+    return_list = list()
+    for i in range(len(values)-1):
+        int1 = values[i]
+        int2 = values[i+1]
+        condition = (data[column_name]>=int1) & (data[column_name]<int2)
+        return_list.append(data[condition])
+    return return_list
+
+
 def plot_lst(fig, title, data, color, plotnumber):
     data['dif'] = data['lst_mean'] - data['insitu_lst']
     data['abs_dif'] = abs(data['lst_mean'] - data['insitu_lst'])
